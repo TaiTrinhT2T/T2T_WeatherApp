@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        btnSearch.setOnClickListener(new OnClickListener() {
+        btnChangeActivity.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 String city = edtSearch.getText().toString();
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
         String url =
 //                London
-                "http://api.openweathermap.org/data/2.5/weather?q="+data+"&units=metric&appid=067129ddffd59938c0922e47c8f991db";
+                "https://api.openweathermap.org/data/2.5/weather?q="+data+"&lang=vi&mode=json&appid=3e29e62e2ddf6dd3d2ebd28aed069215";
         StringRequest stringRequest = new StringRequest(Request.Method.GET,url,
                 new Response.Listener<String>() {
                     @Override
@@ -82,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                             String day = jsonObject.getString("dt");
                             String name = jsonObject.getString("name");
                             txtName.setText("Tên thành phố: "+name);
-// Thiếu API code
                             long l = Long.valueOf(day);
                             Date date = new Date(l+1000L);
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE yyyy-MM-dd HH:mm:ss");
@@ -104,11 +104,12 @@ public class MainActivity extends AppCompatActivity {
                             String doam = jsonObjectMain.getString("humidity");
 //                            Nhiệt độ trả về kiểu dữ liệu double - gỡ lỗi symbol
 
-                            Double a = Double.valueOf(nhietdo);
+                            Double a = Double.valueOf(nhietdo)/10;
+                            DecimalFormat df = new DecimalFormat(".0");
 
-                            String Nhietdo = String.valueOf(a.intValue());
+                            String Nhietdo = df.format(a);
 
-                            txtTemp.setText(Nhietdo+"C");
+                            txtTemp.setText(Nhietdo+"℃");
                             txtHumidity.setText(doam+"%");
 
                             JSONObject jsonObjectWind = jsonObject.getJSONObject("wind");

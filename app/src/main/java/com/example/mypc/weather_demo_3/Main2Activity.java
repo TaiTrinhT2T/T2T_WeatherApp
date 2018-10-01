@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,11 +36,12 @@ public class Main2Activity extends AppCompatActivity {
     // Sau đó tạo mảng lưu trữ value chain
     CustomAdapter customAdapter;
     ArrayList<ThoiTiet> WeatherArray;// khai báo mảng
+    DecimalFormat df = new DecimalFormat(".0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
+        Anhxa();
         Intent intent = getIntent();
         String city = intent.getStringExtra("name");
         Log.d("ketqua", "Dữ liệu truyền qua : " + city);
@@ -68,7 +70,8 @@ public class Main2Activity extends AppCompatActivity {
     }
     private void Get7DaysData(String data) {
 //        CHÚ Ý PHẦN NÀY
-        String url = "api.openweathermap.org/data/2.5/forecast/daily?q=" + data + "units=metric&cnt=7&apiid=067129ddffd59938c0922e47c8f991db";
+        // https://api.openweathermap.org/data/2.5/forecast?q=london&cnt=7&appid=7ab61a290618e8e869e233db0ca90be2
+        String url = "https://api.openweathermap.org/data/2.5/forecast?q=" + data + "&lang=vi&mode=json&cnt=7&appid=3e29e62e2ddf6dd3d2ebd28aed069215";
         RequestQueue requestQueue = Volley.newRequestQueue(Main2Activity.this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -92,14 +95,14 @@ public class Main2Activity extends AppCompatActivity {
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE yyyy-MM-dd");
                                 String Day = simpleDateFormat.format(date);
 
-                                JSONObject jsonObjectTemp = jsonObjectList.getJSONObject("temp");
-                                String max = jsonObjectTemp.getString("max");
-                                String min = jsonObjectTemp.getString("min");
+                                JSONObject jsonObjectTemp = jsonObjectList.getJSONObject("main");
+                                String max = jsonObjectTemp.getString("temp_max");
+                                String min = jsonObjectTemp.getString("temp_min");
 
-                                Double a = Double.valueOf(max);
-                                Double b = Double.valueOf(min);
-                                String NhietdoMax = String.valueOf(a.intValue());
-                                String NhietdoMin = String.valueOf(b.intValue());
+                                Double a = Double.valueOf(max)/10;
+                                Double b = Double.valueOf(min)/10;
+                                String NhietdoMax = df.format(a);
+                                String NhietdoMin = df.format(b);
 
 //                                JSONArray jsonArrayWeather = jsonArrayList.getJSONArray("weather");
                                 JSONArray jsonArrayWeather = jsonObjectList.getJSONArray("weather");
