@@ -1,4 +1,4 @@
-package com.example.mypc.weather_demo_3;
+package com.example.mypc.weather_demo_3.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +15,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mypc.weather_demo_3.Adapters.FeatureWeatherAdapter;
+import com.example.mypc.weather_demo_3.Models.Weather;
+import com.example.mypc.weather_demo_3.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Main2Activity extends AppCompatActivity {
+public class FeatureWeatherActivity extends AppCompatActivity {
 
     String tenthanhpho = "";
     ImageView imageback;
@@ -34,13 +37,13 @@ public class Main2Activity extends AppCompatActivity {
     // Khai báo lớp ánh xạ
     // Ánh xa bắc cầu từ CustomAdapter.java, khai báo class đã tạo
     // Sau đó tạo mảng lưu trữ value chain
-    CustomAdapter customAdapter;
-    ArrayList<ThoiTiet> WeatherArray;// khai báo mảng
+    FeatureWeatherAdapter customAdapter;
+    ArrayList<Weather> WeatherArray;// khai báo mảng
     DecimalFormat df = new DecimalFormat(".0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_feature_weather);
         Anhxa();
         Intent intent = getIntent();
         String city = intent.getStringExtra("name");
@@ -64,15 +67,15 @@ public class Main2Activity extends AppCompatActivity {
         imageback = (ImageView) findViewById(R.id.imageviewBack);
         txtName = (TextView) findViewById(R.id.textviewTenthanhpho);
         lv = (ListView) findViewById(R.id.listview);
-        WeatherArray = new ArrayList<ThoiTiet>();// mảng ThoiTiet
-        customAdapter = new CustomAdapter(Main2Activity.this,WeatherArray);
+        WeatherArray = new ArrayList<Weather>();// mảng ThoiTiet
+        customAdapter = new FeatureWeatherAdapter(FeatureWeatherActivity.this,WeatherArray);
         lv.setAdapter(customAdapter);
     }
     private void Get7DaysData(String data) {
 //        CHÚ Ý PHẦN NÀY
         // https://api.openweathermap.org/data/2.5/forecast?q=london&cnt=7&appid=7ab61a290618e8e869e233db0ca90be2
         String url = "https://api.openweathermap.org/data/2.5/forecast?q=" + data + "&lang=vi&mode=json&cnt=7&appid=3e29e62e2ddf6dd3d2ebd28aed069215";
-        RequestQueue requestQueue = Volley.newRequestQueue(Main2Activity.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(FeatureWeatherActivity.this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -91,7 +94,7 @@ public class Main2Activity extends AppCompatActivity {
                                 String ngay = jsonObjectList.getString("dt");
 // Dùng lại
                                 long l = Long.valueOf(ngay);
-                                Date date = new Date(l+1000L);
+                                Date date = new Date(l*1000);
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE yyyy-MM-dd");
                                 String Day = simpleDateFormat.format(date);
 
@@ -111,7 +114,7 @@ public class Main2Activity extends AppCompatActivity {
                                 String status = jsonObjectWeather.getString("description");
                                 String icon = jsonObjectWeather.getString("icon");
 
-                                WeatherArray.add(new ThoiTiet(Day,status,icon,NhietdoMax,NhietdoMin));
+                                WeatherArray.add(new Weather(Day,status,icon,NhietdoMax,NhietdoMin));
                             }
                             customAdapter.notifyDataSetChanged();
                         }catch (JSONException e)

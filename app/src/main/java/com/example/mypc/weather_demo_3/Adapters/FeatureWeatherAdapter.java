@@ -1,7 +1,6 @@
-package com.example.mypc.weather_demo_3;
+package com.example.mypc.weather_demo_3.Adapters;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,20 +8,21 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mypc.weather_demo_3.Models.Weather;
+import com.example.mypc.weather_demo_3.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 /**
  * Created by MyPC on 20/12/2017.
  */
 
-public class CustomAdapter extends BaseAdapter {
+public class FeatureWeatherAdapter extends BaseAdapter {
     Context context;
-    ArrayList<ThoiTiet> arrayList;
+    ArrayList<Weather> arrayList;
 
-    public CustomAdapter(Context context, ArrayList<ThoiTiet> arrayList) {
+    public FeatureWeatherAdapter(Context context, ArrayList<Weather> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
     }
@@ -47,7 +47,7 @@ public class CustomAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.dong_line_listview,null);
 
-        ThoiTiet ThoiTiet = arrayList.get(i);
+        Weather weather = arrayList.get(i);
 
         TextView txtDay = (TextView) view.findViewById(R.id.textviewNgay);
         TextView txtStatus = (TextView) view.findViewById(R.id.textviewTrangthai);
@@ -55,12 +55,12 @@ public class CustomAdapter extends BaseAdapter {
         TextView txtMinTemp = (TextView) view.findViewById(R.id.textviewMinTemp);
         ImageView imgStatus = (ImageView) view.findViewById(R.id.imageviewTrangthai);
 
-        txtDay.setText(ThoiTiet.Day);
-        txtStatus.setText(ThoiTiet.Status);
-        txtMaxTemp.setText(ThoiTiet.MaxTemp+"℃");
-        txtMinTemp.setText(ThoiTiet.MinTemp+"℃");
+        txtDay.setText(weather.Day);
+        txtStatus.setText(weather.Status);
+        txtMaxTemp.setText(weather.MaxTemp+"℃");
+        txtMinTemp.setText(weather.MinTemp+"℃");
 //lấy dữ liệu, load dữ liệu lên
-       Picasso.with(context).load("http://openweathermap.org/img/w/"+ThoiTiet.Image+".png").into(imgStatus);
+       Picasso.with(context).load("http://openweathermap.org/img/w/"+weather.Image+".png").into(imgStatus);
         return view;
     }
 }

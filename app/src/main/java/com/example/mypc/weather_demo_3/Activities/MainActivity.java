@@ -1,9 +1,8 @@
-package com.example.mypc.weather_demo_3;
+package com.example.mypc.weather_demo_3.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -15,9 +14,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mypc.weather_demo_3.R;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -30,15 +29,19 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     EditText edtSearch;
-    Button btnSearch, btnChangeActivity;
-    TextView txtName, txtCountry, txtStatus, txtTemp, txtHumidity, txtCloud, txtWind, txtDay;
+    Button btnSearch, btnChangeActivity, btnAllUsers;
+    TextView txtName, txtCountry, txtStatus, txtTemp, txtHumidity, txtCloud, txtWind, txtDay, txtUserName;
     ImageView imgIcon;
     String City = "";
+
+    String emailFromIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         AnhXa();
+        emailFromIntent = getIntent().getStringExtra("EMAIL");
+        txtUserName.setText(emailFromIntent);
 //        lấy 1 thành phố mặc định: London hoặc Sài Gòn
         GetCurrentWeatherData("London");
         btnSearch.setOnClickListener(new OnClickListener() {
@@ -61,8 +64,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String city = edtSearch.getText().toString();
-                Intent intent = new Intent(MainActivity.this,Main2Activity.class);
+                Intent intent = new Intent(MainActivity.this,FeatureWeatherActivity.class);
                 intent.putExtra("name",city);
+                startActivity(intent);
+            }
+        });
+
+        btnAllUsers.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MainActivity.this, UsersListActivity.class);
+                intent.putExtra("EMAIL", emailFromIntent);
                 startActivity(intent);
             }
         });
@@ -84,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                             String name = jsonObject.getString("name");
                             txtName.setText("Tên thành phố: "+name);
                             long l = Long.valueOf(day);
-                            Date date = new Date(l+1000L);
+                            Date date = new Date(l*1000);
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE yyyy-MM-dd HH:mm:ss");
                             String Day = simpleDateFormat.format(date);
 
@@ -156,4 +169,6 @@ public class MainActivity extends AppCompatActivity {
         txtWind = (TextView) findViewById(R.id.textviewWind);
         txtDay = (TextView) findViewById(R.id.textviewDay);
         imgIcon = (ImageView) findViewById(R.id.imageIcon);
+        btnAllUsers = findViewById(R.id.btn_all_users);
+        txtUserName = findViewById(R.id.tv_user_name);
     }}
